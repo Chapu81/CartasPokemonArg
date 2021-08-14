@@ -7,6 +7,9 @@ import vuetify from './plugins/vuetify'
 import firebase from 'firebase/app';
 import 'firebase/auth'
 import 'firebase/firestore';
+import pokemon from 'pokemontcgsdk';
+
+pokemon.configure({apiKey: '45ade278-c0b9-4799-a150-ac7a09c32c51'})
 
 const firebaseConfig = {
   apiKey: "AIzaSyD4GAGVBITHW_jsb6NH3TYGMH2VdPH1YuQ",
@@ -21,7 +24,9 @@ firebase.initializeApp(firebaseConfig);
 
 export default firebase.firestore();
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+
+Vue.prototype.$pokemon = pokemon;
 
 new Vue({
   router,
