@@ -1,0 +1,13 @@
+* {
+    scroll-behavior: smooth;
+    list-style: none;
+    text-decoration: none;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.bolder {
+    font-weight: bold;
+}
