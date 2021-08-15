@@ -1,15 +1,15 @@
 <template>
-  <series-list />
+	<series-list />
 </template>
 
 <script>
-  import Series from '../components/global/Series_list'
+import Series from '../components/global/Series_list'
 
-  export default {
+export default {
     name: 'Series',
 
     components: {
-      'series-list': Series
+		'series-list': Series
     },
-  }
+}
 </script>

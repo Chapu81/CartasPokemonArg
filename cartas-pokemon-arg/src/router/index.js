@@ -5,10 +5,15 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/expansiones',
     name: 'Series',
-    component: () => import(/* webpackChunkName: "home" */ '../views/Series.vue')
-  }
+    component: () => import(/* webpackChunkName: "series" */ '../views/Series.vue')
+  },
+  {
+    path: '/expansiones/:id',
+    name: 'Sets',
+    component: () => import(/* webpackChunkName: "sets" */ '../views/Sets.vue')
+  },
 ]
 
 const router = new VueRouter({

@@ -1,14 +1,30 @@
 <template>
-<ul class="series">
+<ul class="series d-flex align-center flex-wrap justify-center">
     <template v-for="(serie, key) in data_list">
-        <li :key="key" @click="test(serie.text_search)" :elevation="2">
+        <li :key="key" 
+            :elevation="2"
+        >
+			<router-link :to="`/expansiones/${serie.text_search}`">
             <v-card
                 :elevation="2"
             >
-                <img :src="`/series/${serie.img}.webp`" :alt="serie.name">
-                <br>
-                {{ serie.name }}
+				<div class="img-container">
+					<img
+						v-if="list"
+						:src="serie.img" 
+						:alt="serie.name"
+					>
+					<img
+						v-else
+						:src="`/series/${serie.img}.webp`" 
+						:alt="serie.name"
+					>
+				</div>
+                <span>
+                    {{ serie.name }}
+                </span>
             </v-card>
+			</router-link>
         </li>
     </template>
 </ul>
@@ -18,10 +34,6 @@
 export default {
     name: 'serieslist',
     props: ['list'],
-
-    data: () => ({
-
-    }),
 
     computed: {
         series() {
@@ -100,8 +112,21 @@ export default {
 		},
 
         data_list() {
-            return this.list ? this.list : this.series;
-        }
+            return this.list ? this.sets : this.series;
+        },
+
+		sets() {
+			let res = [];
+			this.list.forEach(set => {
+				res.push({
+					name: set.name,
+					img: set.images.logo,
+					text_search: set.id,
+				})
+			});
+
+			return res;
+		}
     }
 }
 </script>
@@ -109,15 +134,33 @@ export default {
 <style scoped>
 .series {
     padding-left: 0;
+
 }
+
 .series li {
     text-align: center;
     width: 250px;
-    border-radius: 4px;
-    margin: 25px auto;
+    border-radius: 8px;
+    margin: 25px;
+}
+
+.series li .v-card{
+    padding: 20px;
 }
 
 .series li img {
-    width: 210px;
+    max-width: 210px;
+	max-height: 135px;
+}
+
+.series li .img-container {
+	min-height: 135px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.series li span {
+    color: #888
 }
 </style>
