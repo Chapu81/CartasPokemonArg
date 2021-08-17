@@ -23,7 +23,18 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+store.commit('set_firebase', firebase);
+
+firebase.auth().onAuthStateChanged(function(user) {
+  store.commit('log_state', user ? true : false);
+});
+
 export default firebase.firestore();
+
+
+Vue.component('snackbar-c', () => import('./components/global/Snackbar'));
+
+
 
 Vue.config.productionTip = false;
 

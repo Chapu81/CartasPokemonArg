@@ -18,25 +18,29 @@ export default {
 
 	created() {
 		if(this.set) {
-			this.get_series(this.set);
+			this.$store.getters.sets[this.set] 
+					? this.upd_sets()
+					: this.get_series(this.set);
 		}
 	},
 
 	methods: {
-		get_series(serie) {
+		async get_series(serie) {
 			if(serie !== '') {
-				this.$pokemon.set.where({ q: `series:${serie}` })
-				.then(result => {
-					this.sets = result.data;
-				})
+				await this.$store.dispatch('get_data_set', serie);
+				this.upd_sets();
 			}
+		},
+
+		upd_sets() {
+			this.sets = this.$store.getters.sets[this.set];
 		}
 	},
 
 	computed: {
 		set() {
-			return this.$route.params.id;
-		}
+			return this.$route.params.set;
+		},
 	}
 }
 </script>

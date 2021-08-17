@@ -11,3 +11,9 @@
 .bolder {
     font-weight: bold;
 }
+
+.title-page {
+    font-size: 0;
+    margin: 0;
+    padding: 0;
+}
