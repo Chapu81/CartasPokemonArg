@@ -11,6 +11,7 @@ export default new Vuex.Store({
 		color_app: "blue darken-3",
 		pokemon: null,
 		sets: {},
+		cards_sets: {}
 	},
 
 	mutations: {
@@ -33,6 +34,9 @@ export default new Vuex.Store({
 		set_data_set(state, set) {
 			state.sets[set.id] = set.data;
 		},
+		set_data_cards_sets(state, cards) {
+			state.cards_sets[cards.set] = cards.data;
+		},
 	},
 	
 	actions: {
@@ -46,7 +50,19 @@ export default new Vuex.Store({
 
 				return result.data;
 			})
-		}
+		},
+		
+		async get_data_cards_sets({ commit, state }, set) {
+			await state.pokemon.card.where({ q: `set.id:${set}` })
+			.then(result => {
+				commit('set_data_cards_sets', {
+					set: set,
+					data: result.data
+				});
+
+				return result.data;
+			})
+		},
 	},
 
 	getters: {
@@ -67,6 +83,9 @@ export default new Vuex.Store({
 		},
 		sets: (state) => {
 			return state.sets;
+		},
+		cards_sets: (state) => {
+			return state.cards_sets;
 		},
 	},
 

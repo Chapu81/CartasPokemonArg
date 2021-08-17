@@ -19,6 +19,11 @@ const routes = [
     name: 'Sets',
     component: () => import(/* webpackChunkName: "sets" */ '../views/Sets.vue')
   },
+  {
+    path: '/cartas/:set',
+    name: 'Cards',
+    component: () => import(/* webpackChunkName: "cards" */ '../views/Cards.vue')
+  },
 
   /**** ADMIN ****/
   {

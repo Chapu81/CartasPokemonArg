@@ -4,7 +4,7 @@
         <li :key="key" 
             :elevation="2"
         >
-			<router-link :to="`/expansiones/${serie.text_search}`">
+			<router-link :to="`/${link}/${serie.text_search}`">
             <v-card
                 :elevation="2"
             >
@@ -33,7 +33,7 @@
 <script>
 export default {
     name: 'serieslist',
-    props: ['list'],
+    props: ['list', 'param_link'],
 
     computed: {
         series() {
@@ -126,6 +126,10 @@ export default {
 			});
 
 			return res;
+		},
+
+		link() {
+			return this.param_link ? this.param_link : 'expansiones';
 		}
     }
 }

@@ -1,5 +1,5 @@
 <template>
-	<series-list :list="sets" />
+	<series-list :list="sets" :param_link="'cartas'" />
 </template>
 
 <script>
@@ -26,10 +26,8 @@ export default {
 
 	methods: {
 		async get_series(serie) {
-			if(serie !== '') {
-				await this.$store.dispatch('get_data_set', serie);
-				this.upd_sets();
-			}
+			await this.$store.dispatch('get_data_set', serie);
+			this.upd_sets();
 		},
 
 		upd_sets() {
