@@ -1,12 +1,15 @@
 <template>
-<div v-if="cards.length">
-    <ul class="d-flex flex-wrap justify-space-around">
+<div>
+    <ul class="d-flex flex-wrap justify-space-around" v-if="cards.length">
         <template v-for="(card, key) in cards">
             <li :key="key">
-                <card-c :card="card" />
+                <card-c :card="card" :stock="random_stock()" />
             </li>
         </template>
     </ul>
+
+    <loader-c v-if="loading" />
+
 </div>
 </template>
 
@@ -20,6 +23,7 @@ export default {
 
     data: () => ({
 		cards: [],
+		loading: true,
     }),
 
 	created() {
@@ -38,6 +42,11 @@ export default {
 
 		upd_cards() {
 			this.cards = this.$store.getters.cards_sets[this.set];
+			this.loading = false;
+		},
+
+		random_stock() {
+			return Math.random() < 0.5;
 		}
 	},
 

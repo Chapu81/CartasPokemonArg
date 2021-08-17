@@ -33,6 +33,7 @@ export default firebase.firestore();
 
 
 Vue.component('snackbar-c', () => import('./components/global/Snackbar'));
+Vue.component('loader-c', () => import('./components/global/Loader'));
 
 
 

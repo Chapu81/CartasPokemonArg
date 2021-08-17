@@ -5,11 +5,11 @@
 </template>
 
 <script>
-import Carousel from '../components/home/Carousel.vue'
+import Carousel from '../components/home/Carousel.vue';
 export default {
     name: 'home',
     components: {
-        'carousel-c': Carousel
+        'carousel-c': Carousel,
     },
 
     data: () => ({

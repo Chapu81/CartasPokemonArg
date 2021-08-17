@@ -1,13 +1,13 @@
 <template>
 <div v-if="card">
-    <img :src="img_small" :alt="name">
+    <img :src="img_small" :alt="name" :class="stock ? 'stock' : ''">
 </div>
 </template>
 
 <script>
 export default {
     name: 'card',
-    props: ['card'],
+    props: ['card', 'stock'],
 
     data: () => ({
 
@@ -35,7 +35,20 @@ export default {
 
 <style scoped>
 img {
-    width: 100px;
+    width: 75px;
+    filter: grayscale(100%);
+}
+
+img.stock {
+    filter: grayscale(0%);
+    cursor: pointer;
+}
+
+
+@media screen and (min-width: 375px){
+    img {
+        width: 100px;
+    }
 }
 
 </style>
