@@ -1,6 +1,6 @@
 <template>
 <div>
-    <ul class="d-flex flex-wrap justify-space-around" v-if="cards.length">
+    <ul class="d-flex flex-wrap" v-if="cards.length">
         <template v-for="(card, key) in cards">
             <li :key="key">
                 <card-c :card="card" :stock="random_stock()" />
@@ -60,6 +60,45 @@ export default {
 
 <style scoped>
 ul {
+	padding: 15px 0;
     padding-left: 0;
+	max-width: 300px;
+	margin: 0 auto;
+}
+
+li {
+	margin: 5px;
+}
+
+@media screen and (min-width: 375px){
+	ul {
+		max-width: 360px;
+	}
+}
+
+@media screen and (min-width: 768px){
+	ul {
+		max-width: 750px;
+	}
+
+	li {
+		margin: 10px;
+	}
+}
+
+@media screen and (min-width: 992px){
+	ul {
+		max-width: 960px;
+	}
+}
+
+@media screen and (min-width: 1200px){
+	ul {
+		max-width: 1160px;
+	}
+
+	li {
+		margin: 20px;
+	}
 }
 </style>

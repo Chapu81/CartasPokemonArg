@@ -1,5 +1,12 @@
 <template>
-	<series-list :list="sets" :param_link="'cartas'" />
+<div>
+	<series-list 
+			:list="sets" 
+			:param_link="'cartas'" 
+			@loaded="loading = false" />
+
+	<loader-c v-if="loading" />
+</div>
 </template>
 
 <script>
@@ -14,6 +21,7 @@ export default {
 
 	data: () => ({
 		sets: [],
+		loading: true,
     }),
 
 	created() {
