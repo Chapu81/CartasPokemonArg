@@ -1,17 +1,40 @@
 <template>
 <div v-if="card" class="card-container">
-    <img :src="img_small" :alt="name" :class="stock ? 'stock' : ''">
+    <img 
+        :alt="name" 
+        :src="img_small" 
+        @click="open_modal"
+        :class="stock ? 'stock' : ''"
+    >
+
+    <modal-card 
+        v-if="stock"
+        :card="data_modal" 
+        :action_open="modal" 
+    />
 </div>
 </template>
 
 <script>
+import ModalCard from './Modal_card.vue'
 export default {
     name: 'card',
     props: ['card', 'stock'],
+    components: {
+        'modal-card': ModalCard,
+    },
 
     data: () => ({
-
+        modal: false,
     }),
+
+    methods: {
+        open_modal() {
+            if(this.stock) {
+                this.modal = !this.modal;
+            }
+        }
+    },
 
     computed: {
         images() {
@@ -28,6 +51,14 @@ export default {
 
         name() {
             return this.card.name ? this.card.name : '';
+        },
+
+        data_modal() {
+            return {
+                name: this.name,
+                id: this.card.id,
+                images: this.images,
+            };
         }
     }
 }
