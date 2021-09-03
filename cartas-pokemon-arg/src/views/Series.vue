@@ -1,6 +1,5 @@
 <template>
 <div>
-	<!-- <series-list @loaded="loading = false" /> -->
 	<series-list :list="series" @loaded="loading = false" />
 	<loader-c v-if="loading" />
 </div>

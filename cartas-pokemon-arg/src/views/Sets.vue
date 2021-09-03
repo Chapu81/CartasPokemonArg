@@ -4,10 +4,6 @@
 			:list="sets_filter" 
 			:is_sets="true"
 			@loaded="loading = false" />
-	<!-- <series-list 
-			:list="sets" 
-			:param_link="'cartas'" 
-			@loaded="loading = false" /> -->
 
 	<loader-c v-if="loading" />
 </div>
@@ -24,28 +20,8 @@ export default {
     },
 
 	data: () => ({
-		sets: [],
-		loading: false,
+		loading: true,
     }),
-
-	created() {
-		if(this.set) {
-			this.$store.getters.sets[this.set] 
-					? this.upd_sets()
-					: this.get_series(this.set);
-		}
-	},
-
-	methods: {
-		async get_series(serie) {
-			await this.$store.dispatch('get_data_set', serie);
-			this.upd_sets();
-		},
-
-		upd_sets() {
-			this.sets = this.$store.getters.sets[this.set];
-		}
-	},
 
 	computed: {
 		set() {

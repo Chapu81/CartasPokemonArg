@@ -43,27 +43,40 @@
 
 		<v-divider></v-divider>
 
-		<div class="py-0 pt-3 load-data ml-6" v-if="logued">
-			<template v-for="(data, key) in data_load">
-				<v-select
+		<div v-if="logued" class="d-flex justify-space-between">
+			<div class="py-0 pt-3 load-data ml-6">
+				<template v-for="(data, key) in data_load">
+					<v-select
+						dense
+						outlined
+						:key="key"
+						:items="condition_select"
+						v-if="key === 0"
+						:label="data.text"
+						v-model="data_card[data.input]"
+					></v-select>
+
+					<v-checkbox
+						v-else
+						:key="key"
+						height="5"
+						class="ma-0"
+						:label="data.text"
+						v-model="data_card[data.input]"
+					></v-checkbox>
+				</template>
+			</div>
+			<div class="input-amount mr-6 mt-3">
+				<v-text-field 
 					dense
 					outlined
-					:key="key"
-					:items="condition_select"
-					v-if="key === 0"
-					:label="data.text"
-					v-model="data_card[data.input]"
-				></v-select>
-
-				<v-checkbox
-					v-else
-					:key="key"
-					height="5"
-					class="ma-0"
-					:label="data.text"
-					v-model="data_card[data.input]"
-				></v-checkbox>
-			</template>
+					type="number"
+					width="50"
+					label="Cantidad"
+					class="pa-0 ma-0"
+					v-model="amount"
+				></v-text-field>
+			</div>
 		</div>
 		
 		<div class="py-1" v-else>
@@ -91,6 +104,7 @@
 						</v-card-text>
 					</template>
 				</div>
+
 				<div class="input-amount mr-6">
 					<v-text-field 
 						dense
@@ -109,6 +123,13 @@
 
         <v-card-actions v-if="logued" class="px-6 py-1">
 			<v-spacer></v-spacer>
+			<v-btn
+				color="primary"
+				text
+				@click="state_dialog(false)"
+			>
+				Cancelar
+			</v-btn>
 			<v-btn
 				color="primary"
 				text
@@ -146,6 +167,11 @@ export default {
 			type: Object,
 			default: {},
 		},
+		
+		stock: {
+			type: Boolean,
+			default: true,
+		},
 	},
 
     data: () => ({
@@ -177,8 +203,8 @@ export default {
 
 	computed: {
 		logued() {
-			// return this.$store.getters.logued;
-			return false;
+			// return false;
+			return this.$store.getters.logued;
 		},
 		
 		mobile() {

@@ -51,6 +51,10 @@ export default {
 	},
 
 	computed: {
+		logued() {
+			return this.$store.getters.logued;
+		},
+
 		set() {
 			return this.$route.params.set;
 		},

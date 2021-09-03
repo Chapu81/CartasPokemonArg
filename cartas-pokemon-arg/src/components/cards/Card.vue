@@ -4,11 +4,12 @@
         :alt="name" 
         :src="img_small" 
         @click="open_modal"
-        :class="stock ? 'stock' : ''"
+        :class="[stock ? 'stock' : '', logued ? 'pointer' : '']"
     >
 
     <modal-card 
-        v-if="stock"
+        v-if="stock || logued"
+        :stock="stock"
         :card="data_modal" 
         :action_open="modal" 
     />
@@ -30,13 +31,17 @@ export default {
 
     methods: {
         open_modal() {
-            if(this.stock) {
+            if(this.stock || this.logued) {
                 this.modal = !this.modal;
             }
         }
     },
 
     computed: {
+        logued() {
+			return this.$store.getters.logued;
+		},
+        
         images() {
             return this.card.images ? this.card.images : {};
         },
