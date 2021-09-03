@@ -26,25 +26,107 @@
 			>
 		</div>
 
-        <v-card-text>
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </v-card-text>
+		<div class="d-flex justify-space-between align-center pb-2">
+			<v-card-title class="px-6 py-1">{{ card.name }}</v-card-title>
+			<v-card-title class="px-6 py-1" v-if="!logued">$1.500</v-card-title>
+			<div v-else class="input-price mr-6">
+				<v-text-field 
+					dense
+					outlined
+					type="number"
+					label="Precio" 
+					class="pa-0 ma-0"
+					v-model="data_card.price"
+				></v-text-field>
+			</div>
+		</div>
 
+		<v-divider></v-divider>
 
+		<div class="py-0 pt-3 load-data ml-6" v-if="logued">
+			<template v-for="(data, key) in data_load">
+				<v-select
+					dense
+					outlined
+					:key="key"
+					:items="condition_select"
+					v-if="key === 0"
+					:label="data.text"
+					v-model="data_card[data.input]"
+				></v-select>
 
+				<v-checkbox
+					v-else
+					:key="key"
+					height="5"
+					class="ma-0"
+					:label="data.text"
+					v-model="data_card[data.input]"
+				></v-checkbox>
+			</template>
+		</div>
+		
+		<div class="py-1" v-else>
+			<div class="d-flex justify-space-between- align-center px-6">
+				<v-card-text class="pa-0">
+					Estado: <span class="bolder">Light Played</span>
+				</v-card-text>
+				<v-card-text class="pa-0 text-right">
+					Cantidad: <span class="bolder">2</span>
+				</v-card-text>
+			</div>
+			<div class="d-flex justify-space-between align-center">
+				<div>
+					<template v-for="(data, key) in data_test">
+						<v-card-text class="px-6 py-0" :key="key">
+							{{data.text}}:
+							<span>
+								<v-icon
+									:color="data.result ? 'green' : 'red'"
+									dense
+								>
+									{{data.result ? 'mdi-check' : 'mdi-window-close'}}
+								</v-icon>
+							</span>
+						</v-card-text>
+					</template>
+				</div>
+				<div class="input-amount mr-6">
+					<v-text-field 
+						dense
+						outlined
+						type="number"
+						width="50"
+						label="Cantidad"
+						class="pa-0 ma-0"
+						v-model="amount"
+					></v-text-field>
+				</div>
+			</div>
+		</div>
 
-        <!-- <v-divider></v-divider>
+        <v-divider v-if="logued"></v-divider>
 
-        <v-card-actions>
+        <v-card-actions v-if="logued" class="px-6 py-1">
 			<v-spacer></v-spacer>
 			<v-btn
 				color="primary"
 				text
 				@click="state_dialog(false)"
 			>
-				I accept
+				Guardar
 			</v-btn>
-		</v-card-actions> -->
+		</v-card-actions>
+        <v-card-actions v-else class="px-6 py-1">
+			<v-spacer></v-spacer>
+			<v-btn
+				color="primary"
+				text
+				@click="state_dialog(false)"
+			>
+				Agregar al carrito
+			</v-btn>
+		</v-card-actions>
 	</v-card>
 </v-dialog>
 </div>
@@ -69,6 +151,16 @@ export default {
     data: () => ({
 		dialog: false,
 		img_load: false,
+
+		data_card: {
+			price: 50,
+			condition: 'Light Played',
+			edition: false,
+			foil: false,
+			shadowless: false,
+		},
+
+		amount: 0,
     }),
 
 	watch: {
@@ -84,6 +176,11 @@ export default {
 	},
 
 	computed: {
+		logued() {
+			// return this.$store.getters.logued;
+			return false;
+		},
+		
 		mobile() {
 			return this.$store.getters.mobile;
 		},
@@ -97,14 +194,65 @@ export default {
 		image_loader() {
 			return this.mobile ? 'small' : 'large';
 		},
+
+		data_test() {
+			return [
+				{
+					text: 'Primera edición',
+					result: false,
+				},
+				{
+					text: 'Foil',
+					result: true,
+				},
+				{
+					text: 'Shadowless',
+					result: false,
+				},
+			]
+		},
+		
+		data_load() {
+			return [
+				{
+					text: 'Estado',
+					input: 'condition',
+				},
+				{
+					text: 'Primera edición',
+					input: 'edition',
+				},
+				{
+					text: 'Foil',
+					input: 'foil',
+				},
+				{
+					text: 'Shadowless',
+					input: 'shadowless',
+				},
+			]
+		},
+
+		condition_select() {
+            return [
+                'Mint',
+                'Near mint',
+                'Light Played',
+                'Played',
+                'Heavy Played',
+                'Damaged',
+            ];
+        },
+		
+		
 	}
 }
 </script>
 
 <style scoped>
 img {
-	max-width: 600px;
-	width: 100%;
+	max-height: 60vh;
+	max-width: 100%;
 }
 
 .container-load {
@@ -120,5 +268,30 @@ img {
 
 .container-load img {
 	opacity: 0;
+}
+
+.load-data,
+.input-price {
+	max-width: 150px;
+}
+
+
+.input-price,
+.input-amount {
+	height: 40px;
+}
+
+.input-amount {
+	width: 75px;
+}
+</style>
+
+<style>
+.v-dialog:not(.v-dialog--fullscreen) {
+    max-height: 95%!important;
+}
+
+.input-amount .v-text-field__details {
+	display: none!important;
 }
 </style>

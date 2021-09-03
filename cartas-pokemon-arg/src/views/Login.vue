@@ -68,7 +68,7 @@
 						this.email = '';
 						this.password = '';
 						this.loading = false;
-						this.$router.push('/cartas');
+						this.$router.push('/expansiones');
 					})
 					.catch((error) => {
 						switch('' + error.code + '') {
