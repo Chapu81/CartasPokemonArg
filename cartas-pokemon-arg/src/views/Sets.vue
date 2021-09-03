@@ -24,19 +24,19 @@ export default {
     }),
 
 	computed: {
-		set() {
+		set_param() {
 			return this.$route.params.set;
 		},
 
 		sets_filter() {
 			if(this.set === '') return [];
 			
-			let sets_filter = this.sets_data.filter(set => set.series.toLowerCase() === this.set.toLowerCase());
+			let sets_filter = this.sets.filter(set => set.series.toLowerCase() === this.set_param.toLowerCase());
 			
 			return sets_filter;
 		},
 
-		sets_data() {
+		sets() {
 			return [
 				{
 					id: "base1",

@@ -42,7 +42,6 @@
 		</div>
 
 		<v-divider></v-divider>
-
 		<div v-if="logued" class="d-flex justify-space-between">
 			<div class="py-0 pt-3 load-data ml-6">
 				<template v-for="(data, key) in data_load">
@@ -79,17 +78,20 @@
 			</div>
 		</div>
 		
-		<div class="py-1" v-else>
+		<div class="pt-3" v-else>
 			<div class="d-flex justify-space-between- align-center px-6">
 				<v-card-text class="pa-0">
 					Estado: <span class="bolder">Light Played</span>
 				</v-card-text>
 				<v-card-text class="pa-0 text-right">
-					Cantidad: <span class="bolder">2</span>
+					Stock: <span class="bolder">2</span>
 				</v-card-text>
 			</div>
 			<div class="d-flex justify-space-between align-center">
 				<div>
+					<v-card-text class="pa-0 px-6">
+						Idioma: <span class="bolder">Inglés</span>
+					</v-card-text>
 					<template v-for="(data, key) in data_test">
 						<v-card-text class="px-6 py-0" :key="key">
 							{{data.text}}:
@@ -105,7 +107,7 @@
 					</template>
 				</div>
 
-				<div class="input-amount mr-6">
+				<div class="input-amount mr-6" v-if="logued">
 					<v-text-field 
 						dense
 						outlined
@@ -186,7 +188,7 @@ export default {
 			shadowless: false,
 		},
 
-		amount: 0,
+		amount: 1,
     }),
 
 	watch: {

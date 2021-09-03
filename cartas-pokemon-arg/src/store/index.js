@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import db from '../main'
 
 Vue.use(Vuex)
 
@@ -10,7 +11,6 @@ export default new Vuex.Store({
 		mobile: false,
 		color_app: "blue darken-3",
 		pokemon: null,
-		sets: {},
 		cards_sets: {}
 	},
 
@@ -30,28 +30,13 @@ export default new Vuex.Store({
 		set_pokemon(state, pokemon) {
 			state.pokemon = pokemon;
 		},
-		
-		set_data_set(state, set) {
-			state.sets[set.id] = set.data;
-		},
+
 		set_data_cards_sets(state, cards) {
 			state.cards_sets[cards.set] = cards.data;
 		},
 	},
 	
 	actions: {
-		async get_data_set({ commit, state }, serie) {
-			await state.pokemon.set.where({ q: `series:${serie}` })
-			.then(result => {
-				commit('set_data_set', {
-					id: serie,
-					data: result.data
-				});
-
-				return result.data;
-			})
-		},
-		
 		async get_data_cards_sets({ commit, state }, set) {
 			await state.pokemon.card.where({ q: `set.id:${set}` })
 			.then(result => {
@@ -80,9 +65,6 @@ export default new Vuex.Store({
 		},
 		pokemon: (state) => {
 			return state.pokemon;
-		},
-		sets: (state) => {
-			return state.sets;
 		},
 		cards_sets: (state) => {
 			return state.cards_sets;

@@ -1,11 +1,19 @@
 <template>
 <div v-if="card" class="card-container">
-    <img 
-        :alt="name" 
-        :src="img_small" 
-        @click="open_modal"
-        :class="[stock ? 'stock' : '', logued ? 'pointer' : '']"
+    <v-lazy
+        v-model="isActive"
+        :options="{
+            threshold: .5
+        }"
+        transition="fade-transition"
     >
+        <img 
+            :alt="name" 
+            :src="img_small" 
+            @click="open_modal"
+            :class="[stock ? 'stock' : '', logued ? 'pointer' : '']"
+        >
+    </v-lazy>
 
     <modal-card 
         v-if="stock || logued"
@@ -27,6 +35,7 @@ export default {
 
     data: () => ({
         modal: false,
+        isActive: false,
     }),
 
     methods: {
