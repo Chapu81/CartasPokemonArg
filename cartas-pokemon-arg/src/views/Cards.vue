@@ -3,7 +3,7 @@
     <ul class="d-flex flex-wrap" v-if="cards.length">
         <template v-for="(card, key) in cards">
             <li :key="key">
-                <card-c :card="card" :stock="random_stock()" />
+                <card-c :card="card" :stock="merge_stock_cards(card.id)" />
             </li>
         </template>
     </ul>
@@ -23,6 +23,7 @@ export default {
 
     data: () => ({
 		cards: [],
+		stock: [],
 		loading: true,
     }),
 
@@ -31,6 +32,10 @@ export default {
 			this.$store.getters.cards_sets[this.set] 
 					? this.upd_cards()
 					: this.get_cards_sets(this.set);
+			
+			if(!this.cards_stock.length) {
+				this.get_stock();
+			}
 		}
 	},
 
@@ -40,19 +45,36 @@ export default {
 			this.upd_cards();
 		},
 
+		async get_stock() {
+			try {
+				console.log('test');
+				let stock = await this.$store.dispatch('save_get_stock', 'base1');
+                this.stock = stock;
+			}catch (error) {
+				console.log(error);
+			}
+		},
+
 		upd_cards() {
 			this.cards = this.$store.getters.cards_sets[this.set];
 			this.loading = false;
 		},
 
-		random_stock() {
-			return Math.random() < 0.5;
+		merge_stock_cards(id) {
+			let arr = this.cards_stock.length 
+					? this.cards_stock 
+					: this.stock;
+			return arr.find(card_stock => card_stock.id == id);
 		}
 	},
 
 	computed: {
 		logued() {
 			return this.$store.getters.logued;
+		},
+		
+		cards_stock() {
+			return this.$store.getters.cards_stock[this.set] ?? [];
 		},
 
 		set() {

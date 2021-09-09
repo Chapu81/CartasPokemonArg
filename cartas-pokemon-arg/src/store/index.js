@@ -11,7 +11,8 @@ export default new Vuex.Store({
 		mobile: false,
 		color_app: "blue darken-3",
 		pokemon: null,
-		cards_sets: {}
+		cards_sets: {},
+		cards_stock: {}
 	},
 
 	mutations: {
@@ -34,6 +35,10 @@ export default new Vuex.Store({
 		set_data_cards_sets(state, cards) {
 			state.cards_sets[cards.set] = cards.data;
 		},
+
+		set_cards_stock(state, stock) {
+			state.cards_stock[stock.set] = stock.stock;
+		},
 	},
 	
 	actions: {
@@ -47,6 +52,33 @@ export default new Vuex.Store({
 
 				return result.data;
 			})
+		},
+
+		async save_get_stock({ commit }, set) {
+			try {
+				// const call_db = db.collection('stock').orderBy('date', 'desc').limit(3);
+				const snapshot = await db.collection('stock').get();
+				var stock = [];
+				snapshot.forEach(doc => {
+					let data = {
+						id: doc.id,
+						...doc.data()
+					};
+					stock.push(data);
+				});
+
+				let res = {
+					set,
+					stock
+				};
+				
+				commit('set_cards_stock', res);
+				// return res;
+				return stock;
+	
+			}catch (error) {
+				console.log(error);
+			}
 		},
 	},
 
@@ -68,6 +100,9 @@ export default new Vuex.Store({
 		},
 		cards_sets: (state) => {
 			return state.cards_sets;
+		},
+		cards_stock: (state) => {
+			return state.cards_stock;
 		},
 	},
 

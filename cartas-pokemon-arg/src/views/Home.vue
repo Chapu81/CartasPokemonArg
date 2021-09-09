@@ -15,21 +15,6 @@ export default {
     data: () => ({
 
     }),
-
-    mounted() {
-        this.get_set();
-    },
-
-    methods: {
-        async get_set() {
-			try {
-				let res = await this.$store.dispatch('get_data_set');
-                console.log(res);
-			}catch (error) {
-				console.log(error);
-			}
-		},
-    },
 }
 </script>
 

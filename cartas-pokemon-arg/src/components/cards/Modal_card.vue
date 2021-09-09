@@ -42,8 +42,16 @@
 		</div>
 
 		<v-divider></v-divider>
+		<!-- LOGUED -->
 		<div v-if="logued" class="d-flex justify-space-between">
 			<div class="py-0 pt-3 load-data ml-6">
+				<v-select
+					dense
+					outlined
+					:items="language_select"
+					label="Idioma"
+					v-model="data_card.language"
+				></v-select>
 				<template v-for="(data, key) in data_load">
 					<v-select
 						dense
@@ -73,27 +81,18 @@
 					width="50"
 					label="Cantidad"
 					class="pa-0 ma-0"
-					v-model="amount"
+					v-model="data_card.amount"
 				></v-text-field>
 			</div>
 		</div>
 		
+
+		<!-- NO LOGUED -->
 		<div class="pt-3" v-else>
-			<div class="d-flex justify-space-between- align-center px-6">
-				<v-card-text class="pa-0">
-					Estado: <span class="bolder">Light Played</span>
-				</v-card-text>
-				<v-card-text class="pa-0 text-right">
-					Stock: <span class="bolder">2</span>
-				</v-card-text>
-			</div>
-			<div class="d-flex justify-space-between align-center">
+			<div class="d-flex justify-space-between align-center px-6">
 				<div>
-					<v-card-text class="pa-0 px-6">
-						Idioma: <span class="bolder">Inglés</span>
-					</v-card-text>
 					<template v-for="(data, key) in data_test">
-						<v-card-text class="px-6 py-0" :key="key">
+						<v-card-text class="pa-0" :key="key">
 							{{data.text}}:
 							<span>
 								<v-icon
@@ -106,18 +105,28 @@
 						</v-card-text>
 					</template>
 				</div>
-
-				<div class="input-amount mr-6" v-if="logued">
-					<v-text-field 
-						dense
-						outlined
-						type="number"
-						width="50"
-						label="Cantidad"
-						class="pa-0 ma-0"
-						v-model="amount"
-					></v-text-field>
+				<div>
+					<v-card-text class="pa-0 text-right">
+						Stock: <span class="bolder">{{data_card.amount}}</span>
+					</v-card-text>
+					<v-card-text class="pa-0 text-right">
+						Idioma: <span class="bolder">{{data_card.language}}</span>
+					</v-card-text>
+					<v-card-text class="pa-0">
+						Estado: <span class="bolder">{{data_card.condition}}</span>
+					</v-card-text>
 				</div>
+			</div>
+			<div class="input-amount mr-6" v-if="logued">
+				<v-text-field 
+					dense
+					outlined
+					type="number"
+					width="50"
+					label="Cantidad"
+					class="pa-0 ma-0"
+					v-model="amount"
+				></v-text-field>
 			</div>
 		</div>
 
@@ -135,11 +144,12 @@
 			<v-btn
 				color="primary"
 				text
-				@click="state_dialog(false)"
+				@click="guardar"
 			>
 				Guardar
 			</v-btn>
 		</v-card-actions>
+
         <v-card-actions v-else class="px-6 py-1">
 			<v-spacer></v-spacer>
 			<v-btn
@@ -171,8 +181,7 @@ export default {
 		},
 		
 		stock: {
-			type: Boolean,
-			default: true,
+			default: false,
 		},
 	},
 
@@ -180,15 +189,8 @@ export default {
 		dialog: false,
 		img_load: false,
 
-		data_card: {
-			price: 50,
-			condition: 'Light Played',
-			edition: false,
-			foil: false,
-			shadowless: false,
-		},
+		data_card: {},
 
-		amount: 1,
     }),
 
 	watch: {
@@ -197,9 +199,37 @@ export default {
 		}
 	},
 
+	created() {
+		if(this.stock) {
+			this.data_card = {...this.stock};
+		}else {
+			this.data_card = {
+				price: 50,
+				amount: 1,
+				language: 'Inglés',
+				condition: 'Light Played',
+				edition: false,
+				foil: false,
+				shadowless: false,
+			}
+		}
+	},
+
 	methods: {
 		state_dialog(bool) {
 			this.dialog = bool;
+		},
+
+		guardar() {
+			let res = {
+				...this.data_card,
+				id: this.card.id,
+				name: this.card.name,
+				set: this.card.set,
+			}
+
+			console.log(res);
+			this.state_dialog(false);
 		}
 	},
 
@@ -226,16 +256,16 @@ export default {
 		data_test() {
 			return [
 				{
-					text: 'Primera edición',
-					result: false,
-				},
-				{
 					text: 'Foil',
-					result: true,
+					result: this.data_card.foil,
 				},
 				{
 					text: 'Shadowless',
-					result: false,
+					result: this.data_card.shadowless,
+				},
+				{
+					text: 'Primera edición',
+					result: this.data_card.edition,
 				},
 			]
 		},
@@ -269,6 +299,20 @@ export default {
                 'Played',
                 'Heavy Played',
                 'Damaged',
+            ];
+        },
+
+		language_select() {
+            return [
+                'Inglés',
+                'Japonés',
+                'Coreano',
+                'Español',
+                'Portugués',
+                'Alemán',
+                'Francés',
+                'Holandés',
+                'Italiano',
             ];
         },
 		

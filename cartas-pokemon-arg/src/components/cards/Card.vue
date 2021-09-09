@@ -72,6 +72,7 @@ export default {
                 name: this.name,
                 id: this.card.id,
                 images: this.images,
+                set: this.card.set.id,
             };
         }
     }
