@@ -21,6 +21,7 @@ export default {
 	},
 
 	beforeMount() {
+		this.get_stock();
 		this.set_store_mobile();
 		this.set_store_pokemon();
 	},
@@ -39,7 +40,15 @@ export default {
 
 		set_store_pokemon() {
 			this.$store.commit('set_pokemon', this.$pokemon);
-		}
+		},
+
+		async get_stock() {
+			try {
+				await this.$store.dispatch('save_get_stock');
+			}catch (error) {
+				console.log(error);
+			}
+		},
 	},
 };
 </script>

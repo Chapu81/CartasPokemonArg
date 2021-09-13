@@ -32,10 +32,6 @@ export default {
 			this.$store.getters.cards_sets[this.set] 
 					? this.upd_cards()
 					: this.get_cards_sets(this.set);
-			
-			if(!this.cards_stock.length) {
-				this.get_stock();
-			}
 		}
 	},
 
@@ -43,16 +39,6 @@ export default {
 		async get_cards_sets(set) {
 			await this.$store.dispatch('get_data_cards_sets', set);
 			this.upd_cards();
-		},
-
-		async get_stock() {
-			try {
-				console.log('test');
-				let stock = await this.$store.dispatch('save_get_stock', 'base1');
-                this.stock = stock;
-			}catch (error) {
-				console.log(error);
-			}
 		},
 
 		upd_cards() {
@@ -74,7 +60,7 @@ export default {
 		},
 		
 		cards_stock() {
-			return this.$store.getters.cards_stock[this.set] ?? [];
+			return this.$store.getters.cards_stock ?? [];
 		},
 
 		set() {

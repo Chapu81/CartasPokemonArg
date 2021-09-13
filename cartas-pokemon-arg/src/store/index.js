@@ -12,7 +12,7 @@ export default new Vuex.Store({
 		color_app: "blue darken-3",
 		pokemon: null,
 		cards_sets: {},
-		cards_stock: {}
+		cards_stock: [],
 	},
 
 	mutations: {
@@ -37,7 +37,21 @@ export default new Vuex.Store({
 		},
 
 		set_cards_stock(state, stock) {
-			state.cards_stock[stock.set] = stock.stock;
+			state.cards_stock = stock;
+		},
+		
+		push_cards_stock(state, stock) {
+			state.cards_stock.push(stock);
+		},
+		
+		delete_cards_stock(state, id) {
+			let key = state.cards_stock.findIndex(el => el.id === id);
+			state.cards_stock.splice(key, 1);
+		},
+		
+		upd_cards_stock(state, card) {
+			let key = state.cards_stock.findIndex(el => el.id === card.id);
+			state.cards_stock.splice(key, 1, card);
 		},
 	},
 	
@@ -53,31 +67,82 @@ export default new Vuex.Store({
 				return result.data;
 			})
 		},
+		
+		async get_data_cards_namess({ commit, state }, name) {
+			await state.pokemon.card.where({ q: `name:${name}` })
+			.then(result => {
+				return result.data;
+			})
+		},
 
-		async save_get_stock({ commit }, set) {
+		async save_get_stock({ commit }) {
 			try {
 				// const call_db = db.collection('stock').orderBy('date', 'desc').limit(3);
 				const snapshot = await db.collection('stock').get();
 				var stock = [];
 				snapshot.forEach(doc => {
 					let data = {
-						id: doc.id,
+						id_base: doc.id,
 						...doc.data()
 					};
 					stock.push(data);
 				});
-
-				let res = {
-					set,
-					stock
-				};
 				
-				commit('set_cards_stock', res);
+				commit('set_cards_stock', stock);
 				// return res;
 				return stock;
 	
 			}catch (error) {
 				console.log(error);
+			}
+		},
+
+		async push_card({ commit }, data) {
+			try {
+				let res = await db.collection('stock').add(data)
+				.then(doc => {
+					let card = {
+						...data,
+						id_base: doc.id
+					}
+					commit('push_cards_stock', card);
+				});
+
+		
+				return true;
+	
+			}catch (error) {
+				console.log(error);
+				return false;
+			}
+		},
+
+		async delete_card({ commit }, {id, id_base}) {
+			try {
+				console.log(id);
+				console.log(id_base);
+				let res = await db.collection('stock').doc(id_base).delete();
+				commit('delete_cards_stock', id);
+
+				return true
+	
+			}catch (error) {
+				console.log(error);
+				return false;
+			}
+		},
+
+		async update_card({ commit }, { id_base, data}) {
+			try {
+				await db.collection('stock').doc(id_base).update(data);
+
+				commit('upd_cards_stock', data);
+				
+				return true
+
+			}catch (error) {
+				console.log(error);
+				return false;
 			}
 		},
 	},

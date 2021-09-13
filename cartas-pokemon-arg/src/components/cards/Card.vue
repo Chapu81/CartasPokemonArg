@@ -20,7 +20,11 @@
         :stock="stock"
         :card="data_modal" 
         :action_open="modal" 
+        @active_snackbar="active_snackbar($event)"
     />
+
+    <snackbar-c :text="text_snackbar" />
+
 </div>
 </template>
 
@@ -36,6 +40,7 @@ export default {
     data: () => ({
         modal: false,
         isActive: false,
+        text_snackbar: '',
     }),
 
     methods: {
@@ -43,7 +48,12 @@ export default {
             if(this.stock || this.logued) {
                 this.modal = !this.modal;
             }
-        }
+        },
+
+        active_snackbar(text) {
+			setTimeout(() => this.text_snackbar = text, 5);
+			setTimeout(() => this.text_snackbar = '', 2010);
+		},
     },
 
     computed: {

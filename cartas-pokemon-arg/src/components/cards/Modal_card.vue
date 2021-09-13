@@ -5,6 +5,16 @@
     width="450"
 >
     <v-card>
+		<v-btn
+			icon
+			large
+			class="delete"
+			v-if="this.stock && logued"
+			@click="delete_card"
+			:loading="loading_delete"
+		>
+			<v-icon>mdi-delete</v-icon>
+		</v-btn>
 		<div class="text-center pt-5 px-6">
 			<div v-show="!img_load" class="container-load">
 				<img 
@@ -88,10 +98,10 @@
 		
 
 		<!-- NO LOGUED -->
-		<div class="pt-3" v-else>
+		<div class="py-3" v-else>
 			<div class="d-flex justify-space-between align-center px-6">
 				<div>
-					<template v-for="(data, key) in data_test">
+					<template v-for="(data, key) in data_booleans">
 						<v-card-text class="pa-0" :key="key">
 							{{data.text}}:
 							<span>
@@ -130,9 +140,9 @@
 			</div>
 		</div>
 
-        <v-divider v-if="logued"></v-divider>
+        <v-divider></v-divider>
 
-        <v-card-actions v-if="logued" class="px-6 py-1">
+        <v-card-actions v-if="logued" class="px-6 pt-1">
 			<v-spacer></v-spacer>
 			<v-btn
 				color="primary"
@@ -144,13 +154,24 @@
 			<v-btn
 				color="primary"
 				text
-				@click="guardar"
+				@click="update_card"
+				v-if="this.stock"
+				:loading="loading_save"
+			>
+				Actualizar
+			</v-btn>
+			<v-btn 
+				v-else
+				color="primary"
+				text
+				@click="save_card"
+				:loading="loading_save"
 			>
 				Guardar
 			</v-btn>
 		</v-card-actions>
 
-        <v-card-actions v-else class="px-6 py-1">
+        <!-- <v-card-actions v-else class="px-6 py-1">
 			<v-spacer></v-spacer>
 			<v-btn
 				color="primary"
@@ -159,7 +180,7 @@
 			>
 				Agregar al carrito
 			</v-btn>
-		</v-card-actions>
+		</v-card-actions> -->
 	</v-card>
 </v-dialog>
 </div>
@@ -191,36 +212,45 @@ export default {
 
 		data_card: {},
 
+		loading_delete: false,
+		loading_save: false,
     }),
 
 	watch: {
 		action_open() {
 			this.state_dialog(true);
+		},
+
+		stock() {
+			this.set_stock();
 		}
 	},
 
 	created() {
-		if(this.stock) {
-			this.data_card = {...this.stock};
-		}else {
-			this.data_card = {
-				price: 50,
-				amount: 1,
-				language: 'Inglés',
-				condition: 'Light Played',
-				edition: false,
-				foil: false,
-				shadowless: false,
-			}
-		}
+		this.set_stock();
 	},
 
 	methods: {
+		set_stock() {
+			if(this.stock) {
+				this.data_card = {...this.stock};
+			}else {
+				this.data_card = {
+					price: 50,
+					amount: 1,
+					language: 'Inglés',
+					condition: 'Light Played',
+					edition: false,
+					foil: false,
+					shadowless: false,
+				}
+			}
+		},
 		state_dialog(bool) {
 			this.dialog = bool;
 		},
 
-		guardar() {
+		save_card() {
 			let res = {
 				...this.data_card,
 				id: this.card.id,
@@ -228,9 +258,84 @@ export default {
 				set: this.card.set,
 			}
 
-			console.log(res);
-			this.state_dialog(false);
-		}
+			this.push_card(res);
+		},
+		
+		actualizar() {
+			let res = {
+				...this.data_card,
+				id: this.card.id,
+				name: this.card.name,
+				set: this.card.set,
+			}
+
+			this.push_card(res);
+		},
+
+		active_snackbar(text) {
+			this.$emit('active_snackbar', text);
+		},
+
+		async push_card(card) {
+			this.loading_save = true;
+			try {
+				let res = await this.$store.dispatch('push_card', card);
+				
+				if(res) {
+					this.active_snackbar('Carta cargada correctamente');
+					this.state_dialog(false);
+				}
+
+			}catch (error) {
+				console.log(error);
+			}
+
+			this.loading_save = false;
+		},
+		
+		async update_card(card) {
+			this.loading_save = true;
+			try {
+				let res = await this.$store.dispatch('update_card', { 
+					id_base: card.id_base,
+					data: card
+				});
+				
+				if(res) {
+					this.active_snackbar('Carta actualizada correctamente');
+					this.state_dialog(false);
+				}
+
+			}catch (error) {
+				console.log(error);
+			}
+
+			this.loading_save = false;
+		},
+		
+		async delete_card() {
+			this.loading_delete = true;
+			let data = {
+					id: this.data_card.id,
+					id_base: this.data_card.id_base,
+			};
+			console.log(data);
+			try {
+				let res = await this.$store.dispatch('delete_card', data);
+				
+				if(res) {
+					this.active_snackbar('Carta borrada correctamente');
+					this.state_dialog(false);
+				}
+
+			}catch (error) {
+				console.log(error);
+			}
+
+			this.loading_delete = false;
+		},
+
+		
 	},
 
 	computed: {
@@ -253,7 +358,7 @@ export default {
 			return this.mobile ? 'small' : 'large';
 		},
 
-		data_test() {
+		data_booleans() {
 			return [
 				{
 					text: 'Foil',
@@ -355,6 +460,12 @@ img {
 
 .input-amount {
 	width: 75px;
+}
+
+.delete {
+	position: absolute;
+	right: 40px;
+	bottom: 50px;
 }
 </style>
 
