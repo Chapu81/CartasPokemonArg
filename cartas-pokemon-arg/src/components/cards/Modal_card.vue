@@ -293,12 +293,12 @@ export default {
 			this.loading_save = false;
 		},
 		
-		async update_card(card) {
+		async update_card() {
 			this.loading_save = true;
 			try {
 				let res = await this.$store.dispatch('update_card', { 
-					id_base: card.id_base,
-					data: card
+					id_base: this.data_card.id_base,
+					data: this.data_card
 				});
 				
 				if(res) {
