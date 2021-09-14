@@ -68,11 +68,14 @@ export default new Vuex.Store({
 			})
 		},
 		
-		async get_data_cards_namess({ commit, state }, name) {
-			await state.pokemon.card.where({ q: `name:${name}` })
+		async get_data_cards_names({ state }, name) {
+			console.log(name);
+			let res = await state.pokemon.card.where({ q: `name:${name}` })
 			.then(result => {
 				return result.data;
 			})
+
+			return res;
 		},
 
 		async save_get_stock({ commit }) {

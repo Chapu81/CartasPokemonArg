@@ -25,6 +25,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "cards" */ '../views/Cards.vue')
   },
 
+  {
+    path: '/busqueda/:name',
+    name: 'Search',
+    component: () => import(/* webpackChunkName: "cardssearch" */ '../views/Search.vue')
+  },
+
   /**** ADMIN ****/
   {
     path: '/login-admin',
