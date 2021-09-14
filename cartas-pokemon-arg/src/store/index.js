@@ -69,7 +69,6 @@ export default new Vuex.Store({
 		},
 		
 		async get_data_cards_names({ state }, name) {
-			console.log(name);
 			let res = await state.pokemon.card.where({ q: `name:${name}` })
 			.then(result => {
 				return result.data;
@@ -122,8 +121,6 @@ export default new Vuex.Store({
 
 		async delete_card({ commit }, {id, id_base}) {
 			try {
-				console.log(id);
-				console.log(id_base);
 				let res = await db.collection('stock').doc(id_base).delete();
 				commit('delete_cards_stock', id);
 

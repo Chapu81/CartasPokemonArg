@@ -35,14 +35,20 @@ export default {
         cards: []
     }),
 
+    watch: {
+        name() {
+            this.get_cards_name();
+        }
+    },
+
 	created() {
 		this.get_cards_name();
 	},
 
 	methods: {
 		async get_cards_name() {
+            this.loading = true;
 			let res = await this.$store.dispatch('get_data_cards_names', this.name);
-            console.log(res);
             if(res) this.cards = [...res];
 
             this.loading = false;
@@ -63,7 +69,7 @@ export default {
 		},
 
         name() {
-			return this.$route.params.name ? this.$route.params.name : '';
+			return this.$route.params.name ? this.$route.params.name.toLowerCase() : '';
 		},
 	}
 }

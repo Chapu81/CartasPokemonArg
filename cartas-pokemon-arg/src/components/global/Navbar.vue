@@ -93,6 +93,7 @@
 				let page = `/busqueda/${this.data_search.toLowerCase()}`;
 				if(this.$route.fullPath != page) {
 					this.$router.push(page)
+					this.data_search = '';
 				}
 
 				setTimeout(() => {
